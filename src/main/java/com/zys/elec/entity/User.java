@@ -31,8 +31,8 @@ import lombok.Setter;
  */
 
 @Entity
-@Table(name = "user")
 @Data
+@Table(name = "user")
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +56,7 @@ public class User {
 
   @Column(name = "is_deleted", columnDefinition = "BOOLEAN DEFAULT FALSE")
   private boolean isDeleted;
+
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<ElectricityRecord> electricityRecords;

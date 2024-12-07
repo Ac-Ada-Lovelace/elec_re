@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ServiceResult<UserDTO> create(User user) {
-        var exists = userRepository.findByUserName(user.getUsername());
+        var exists = userRepository.findByUsername(user.getUsername());
         if (exists.isPresent()) {
             return ServiceResult.failure("User already exists");
         }
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ServiceResult<UserDTO> getByUsername(String username) {
-        Optional<User> user = userRepository.findByUserName(username);
+        Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
             return ServiceResult.success(convertToDTO(user.get()));
         } else {

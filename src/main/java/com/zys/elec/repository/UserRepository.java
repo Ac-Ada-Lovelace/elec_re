@@ -1,4 +1,4 @@
-package com.zys.elec.repo;
+package com.zys.elec.repository;
 
 import java.util.Optional;
 
@@ -10,7 +10,8 @@ import com.zys.elec.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByUserName(String username);
-    
+    Optional<User> findByUsername(String username);
+
+
 
 }

@@ -1,6 +1,6 @@
 package com.zys.elec.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import com.zys.elec.common.ServiceResult;

@@ -3,6 +3,7 @@ package com.zys.elec.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.zys.elec.common.ServiceResult;
 import com.zys.elec.entity.Follow;
@@ -10,6 +11,8 @@ import com.zys.elec.entity.User;
 import com.zys.elec.service.FollowService;
 import com.zys.elec.service.UserService;
 
+
+@Service
 public class FollowServiceImpl implements FollowService {
 
     @Autowired

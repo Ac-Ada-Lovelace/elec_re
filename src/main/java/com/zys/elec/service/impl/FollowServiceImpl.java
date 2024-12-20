@@ -11,31 +11,27 @@ import com.zys.elec.entity.User;
 import com.zys.elec.service.FollowService;
 import com.zys.elec.service.UserService;
 
-
 @Service
 public class FollowServiceImpl implements FollowService {
-
-    @Autowired
-    private FollowService followService;
 
     @Autowired
     private UserService userService;
 
     @Override
     public ServiceResult<Follow> followUser(User follower, User followee) {
-        if (!userService.getById(follower.getId()).isSuccess()) {
+        if (!userService.getUserById(follower.getId()).isSuccess()) {
             return ServiceResult.failure("Follower does not exist");
         }
 
-        if (!userService.getById(followee.getId()).isSuccess()) {
+        if (!userService.getUserById(followee.getId()).isSuccess()) {
             return ServiceResult.failure("Followee does not exist");
         }
 
-        if (followService.isFollowing(follower, followee).isSuccess()) {
+        if (isFollowing(follower, followee).isSuccess()) {
             return ServiceResult.failure("Already following");
         }
 
-        ServiceResult<Follow> followResult = followService.followUser(follower, followee);
+        ServiceResult<Follow> followResult = followUser(follower, followee);
         if (followResult.isSuccess()) {
             return ServiceResult.success(followResult.getData());
         } else {
@@ -46,19 +42,19 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public ServiceResult<Void> unfollowUser(User follower, User followee) {
-        if (!userService.getById(follower.getId()).isSuccess()) {
+        if (!userService.getUserById(follower.getId()).isSuccess()) {
             return ServiceResult.failure("Follower does not exist");
         }
 
-        if (!userService.getById(followee.getId()).isSuccess()) {
+        if (!userService.getUserById(followee.getId()).isSuccess()) {
             return ServiceResult.failure("Followee does not exist");
         }
 
-        if (!followService.isFollowing(follower, followee).isSuccess()) {
+        if (!isFollowing(follower, followee).isSuccess()) {
             return ServiceResult.failure("Not following");
         }
 
-        ServiceResult<Void> unfollowResult = followService.unfollowUser(follower, followee);
+        ServiceResult<Void> unfollowResult = unfollowUser(follower, followee);
         if (unfollowResult.isSuccess()) {
             return ServiceResult.success(null);
         } else {
@@ -68,7 +64,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public ServiceResult<List<Follow>> getFollowers(User followee) {
-        var followers = followService.getFollowers(followee);
+        var followers = getFollowers(followee);
         if (followers.isSuccess()) {
             return ServiceResult.success(followers.getData());
         } else {
@@ -78,7 +74,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public ServiceResult<List<Follow>> getFollowees(User follower) {
-        var followees = followService.getFollowees(follower);
+        var followees = getFollowees(follower);
         if (followees.isSuccess()) {
             return ServiceResult.success(followees.getData());
         } else {
@@ -88,7 +84,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public ServiceResult<Boolean> isFollowing(User follower, User followee) {
-        var isFollowing = followService.isFollowing(follower, followee);
+        var isFollowing = isFollowing(follower, followee);
         if (isFollowing.isSuccess()) {
             return ServiceResult.success(isFollowing.getData());
         } else {

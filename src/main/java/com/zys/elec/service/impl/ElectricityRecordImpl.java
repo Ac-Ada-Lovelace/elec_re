@@ -24,7 +24,7 @@ public class ElectricityRecordImpl implements ElectricityRecordService {
 
     @Override
     public ServiceResult<ElectricityRecord> save(ElectricityRecord electricityRecord) {
-        var exists = userService.getById(electricityRecord.getId());
+        var exists = userService.getUserById(electricityRecord.getId());
         if (!exists.isSuccess()) {
             return ServiceResult.failure("User does not exist");
         }
@@ -107,7 +107,7 @@ public class ElectricityRecordImpl implements ElectricityRecordService {
     @Override
     public ServiceResult<List<ElectricityRecord>> getByDateRangeAndUserId(LocalDate startDate, LocalDate endDate,
             Long userId) {
-        var user = userService.getById(userId).getData().toEntity();
+        var user = userService.getUserById(userId).getData().toEntity();
         if (user == null) {
             return ServiceResult.failure("User not found");
         }

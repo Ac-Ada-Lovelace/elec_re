@@ -21,7 +21,7 @@ public class UserController {
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseResult<User> getUserById(@RequestParam Long id) {
-        var result = userService.getById(id);
+        var result = userService.getUserById(id);
         if (result.isSuccess()) {
             return ResponseResult.success(result.getData().toEntity());
         } else {

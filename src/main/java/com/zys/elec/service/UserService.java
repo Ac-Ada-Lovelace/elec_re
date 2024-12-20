@@ -10,7 +10,7 @@ import com.zys.elec.entity.User;
 @Service
 public interface UserService {
     
-    public ServiceResult<UserDTO> getById(Long id);
+    public ServiceResult<UserDTO> getUserById(Long id);
 
     public ServiceResult<UserDTO> getByUsername(String username);
 

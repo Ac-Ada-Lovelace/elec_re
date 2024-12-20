@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServiceResult<UserDTO> getById(Long id) {
+    public ServiceResult<UserDTO> getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             return ServiceResult.success(convertToDTO(user.get()));

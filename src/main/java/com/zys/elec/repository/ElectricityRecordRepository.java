@@ -21,4 +21,6 @@ public interface ElectricityRecordRepository extends JpaRepository<ElectricityRe
 
     Optional<List<ElectricityRecord>> findByRecordDateBetweenAndUser(LocalDate startDate, LocalDate endDate, User userId);
 
+    Optional<List<ElectricityRecord>> findByUserAndRecordDate(User user, LocalDate recordDate);
+
 }

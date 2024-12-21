@@ -20,4 +20,6 @@ public interface UserService {
 
     public ServiceResult<UserDTO> delete(Long id);
 
+    public ServiceResult<UserDTO> checkPassword(String username, String password);
+
 }

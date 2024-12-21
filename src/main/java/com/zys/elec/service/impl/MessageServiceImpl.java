@@ -23,8 +23,17 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private UserService userService;
 
+    private boolean IsUserExists(Long userId) {
+        return userService.getUserById(userId).isSuccess();
+    }
+
     @Override
     public ServiceResult<List<Message>> getConversation(Long senderId, Long receiverId) {
+
+        if (!IsUserExists(senderId) || !IsUserExists(receiverId)) {
+            return new ServiceResult<>(false, "Sender or receiver not found", null);
+        }
+
         var res = messageRepository.findMessagesBetweenUsers(senderId, receiverId);
         if (res.isEmpty()) {
             return new ServiceResult<>(false, "No messages found", null);
@@ -34,24 +43,35 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public ServiceResult<Boolean> sendMessage(Message message) {
-        var rec = message.getReceiverId();
-        var sen = message.getSenderId();
+    public ServiceResult<Long> sendMessage(Message message) {
+        // Validate message timestamp, not null, not in the future, not more than 3
+        // minutes in the past
+        final LocalDateTime sentAt = message.getSentAt();
 
-        var receiver = userService.getUserById(rec);
-        var sender = userService.getUserById(sen);
-
-        if (receiver == null || sender == null) {
-            return new ServiceResult<>(false, "Receiver or sender not found", false);
+        if (sentAt == null) {
+            return new ServiceResult<>(false, "SentAt is required", 0L);
+        }
+        final LocalDateTime now = LocalDateTime.now();
+        if (sentAt.isAfter(now)) {
+            return new ServiceResult<>(false, "SentAt cannot be in the future", 0L);
+        }
+        if (sentAt.isBefore(now.minusMinutes(3))) {
+            return new ServiceResult<>(false, "SentAt cannot be more than 3 minutes in the past", 0L);
         }
 
+        // Validate sender and receiver
+        if (!IsUserExists(message.getSenderId()) || !IsUserExists(message.getReceiverId())) {
+            return new ServiceResult<>(false, "Sender or receiver not found", 0L);
+        }
+
+        Message savedMessage = null;
         try {
-            messageRepository.save(message);
-            return new ServiceResult<>(true, "Message sent", true);
+            savedMessage = messageRepository.save(message);
         } catch (Exception e) {
-            return new ServiceResult<>(false, "Failed to send message: " + e.getMessage(), false);
+            return new ServiceResult<>(false, "Failed to send message: " + e.getMessage(), 0L);
         }
 
+        return new ServiceResult<>(true, "Message sent", savedMessage.getId());
     }
 
     @Override

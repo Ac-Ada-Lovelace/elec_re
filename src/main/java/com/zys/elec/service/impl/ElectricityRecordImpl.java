@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zys.elec.common.ServiceResult;
+import com.zys.elec.dto.ElectricityRecordUploadDTO;
 import com.zys.elec.entity.ElectricityRecord;
 import com.zys.elec.entity.User;
 import com.zys.elec.repository.ElectricityRecordRepository;
@@ -23,18 +24,26 @@ public class ElectricityRecordImpl implements ElectricityRecordService {
     private UserService userService;
 
     @Override
-    public ServiceResult<ElectricityRecord> save(ElectricityRecord electricityRecord) {
-        var exists = userService.getUserById(electricityRecord.getId());
-        if (!exists.isSuccess()) {
-            return ServiceResult.failure("User does not exist");
+    public ServiceResult<ElectricityRecord> addNew(ElectricityRecord electricityRecord) {
+
+        if (electricityRecord.getUser() == null) {
+            return ServiceResult.failure("User is required");
         }
 
-        var newElectricityRecord = electricityRecordRepository.save(electricityRecord);
-
-        if (newElectricityRecord != null) {
+        if (electricityRecord.getRecordDate() == null) {
+            return ServiceResult.failure("Record date is required");
+        }
+        var exists = electricityRecordRepository.findByUserAndRecordDate(electricityRecord.getUser(),
+                electricityRecord.getRecordDate());
+        if (exists.isPresent()) {
+            return ServiceResult.failure("Electricity record already exists");
+        }
+        try {
+            var newElectricityRecord = electricityRecordRepository.save(electricityRecord);
             return ServiceResult.success(newElectricityRecord);
+        } catch (Exception e) {
+            return ServiceResult.failure("Failed to create electricity record");
         }
-        return ServiceResult.failure("Failed to create electricity record");
 
     }
 
@@ -59,12 +68,16 @@ public class ElectricityRecordImpl implements ElectricityRecordService {
 
     @Override
     public ServiceResult<ElectricityRecord> update(ElectricityRecord electricityRecord) {
-        var exists = electricityRecordRepository.findById(electricityRecord.getId());
-        if (exists.isPresent()) {
-            var updatedElectricityRecord = electricityRecordRepository.save(electricityRecord);
-            return ServiceResult.success(updatedElectricityRecord);
-        } else {
-            return ServiceResult.failure("Electricity record not found");
+        try {
+            var exists = electricityRecordRepository.findById(electricityRecord.getId());
+            if (exists.isPresent()) {
+                var updatedElectricityRecord = electricityRecordRepository.save(electricityRecord);
+                return ServiceResult.success(updatedElectricityRecord);
+            } else {
+                return ServiceResult.failure("Electricity record not found");
+            }
+        } catch (Exception e) {
+            return ServiceResult.failure("Failed to update electricity record");
         }
     }
 
@@ -111,12 +124,33 @@ public class ElectricityRecordImpl implements ElectricityRecordService {
         if (user == null) {
             return ServiceResult.failure("User not found");
         }
-        Optional<List<ElectricityRecord>> res = electricityRecordRepository.findByRecordDateBetweenAndUser(startDate, endDate,
+        Optional<List<ElectricityRecord>> res = electricityRecordRepository.findByRecordDateBetweenAndUser(startDate,
+                endDate,
                 user);
         if (res.isPresent()) {
             return ServiceResult.success(res.get());
         }
         return ServiceResult.failure("Electricity record not found");
+    }
+
+    @Override
+    public ServiceResult<ElectricityRecord> uploadRecord(ElectricityRecordUploadDTO record) {
+        var user_id = record.getUserId();
+        var user = userService.getUserById(user_id).getData().toEntity();
+        if (user == null) {
+            return ServiceResult.failure("User not found");
+        }
+        var exists = electricityRecordRepository.findByUserAndRecordDate(user, LocalDate.now());
+        if (exists.isPresent()) {
+            return ServiceResult.failure("Electricity record already exists");
+        }
+
+        var electricityRecord = new ElectricityRecord();
+        electricityRecord.setElectricityConsumed(record.getElectricityConsumed());
+        electricityRecord.setRecordDate(LocalDate.now());
+        electricityRecord.setUser(user);
+        return addNew(electricityRecord);
+
     }
 
     // CRUD

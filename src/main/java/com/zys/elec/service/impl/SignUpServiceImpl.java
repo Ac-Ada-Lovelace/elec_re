@@ -8,12 +8,15 @@ import com.zys.elec.dto.UserDTO;
 import com.zys.elec.entity.User;
 import com.zys.elec.service.SignUpService;
 import com.zys.elec.service.UserService;
+
 @Service
 public class SignUpServiceImpl implements SignUpService {
 
     @Autowired
     private UserService userService;
-    
+
+
+
     @Override
     public ServiceResult<UserDTO> signUp(User user) {
         var res = userService.create(user);
@@ -21,8 +24,8 @@ public class SignUpServiceImpl implements SignUpService {
             return ServiceResult.success(res.getData());
         } else {
             return ServiceResult.failure(res.getMessage());
-            
+
         }
     }
-    
+
 }

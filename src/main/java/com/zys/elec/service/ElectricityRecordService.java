@@ -4,11 +4,15 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import com.zys.elec.common.ServiceResult;
+import com.zys.elec.dto.ElectricityRecordUploadDTO;
 import com.zys.elec.entity.ElectricityRecord;
 
 @Service
 public interface ElectricityRecordService {
-    ServiceResult<ElectricityRecord> save(ElectricityRecord electricityRecord);
+
+    ServiceResult<ElectricityRecord> uploadRecord(ElectricityRecordUploadDTO record);
+
+    ServiceResult<ElectricityRecord> addNew(ElectricityRecord electricityRecord);
 
     ServiceResult<ElectricityRecord> getById(Long id);
 

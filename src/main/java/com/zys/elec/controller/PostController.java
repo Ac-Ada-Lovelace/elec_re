@@ -11,17 +11,17 @@ import com.zys.elec.service.PostService;
 
 public class PostController {
 
-    @Autowired // 自动注入PostService实例
+    @Autowired
     private PostService postService;
 
-    // 创建新动态
+
     @PostMapping("/post/create")
     @ResponseBody
     public ResponseResult<Post> createPost(
             @RequestParam Long userId,
             @RequestParam String content) {
         var post = new Post();
-        post.setUserId(userId);
+        post.getUser().setId(userId);
         post.setContent(content);
         var result = postService.createPost(post);
         if (result.isSuccess()) {
@@ -31,7 +31,7 @@ public class PostController {
         }
     }
 
-    // 更新
+
     @PostMapping("/post/update")
     @ResponseBody
     public ResponseResult<Void> updatePost(
@@ -46,7 +46,7 @@ public class PostController {
         }
     }
 
-    // 删除
+
     @PostMapping("/post/delete")
     @ResponseBody
     public ResponseResult<Void> deletePost(@RequestParam Long postId) {

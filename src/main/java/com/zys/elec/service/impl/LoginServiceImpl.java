@@ -15,13 +15,10 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private UserService userService;
 
-
-
     @Override
     public ServiceResult<UserDTO> login(LoginDTO user) {
-        var un = user.getUsername();
-        var pw = user.getPassword();
-        
+        // var un = user.getUsername();
+        // var pw = user.getPassword();
         var res = userService.checkPassword(user.getUsername(), user.getPassword());
         if (res.isSuccess()) {
             return ServiceResult.success(res.getData());

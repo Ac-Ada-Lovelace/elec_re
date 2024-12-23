@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zys.elec.common.ResponseResult;
 import com.zys.elec.dto.ElectricityRecordDTO;
 import com.zys.elec.dto.ElectricityRecordUploadDTO;
-import com.zys.elec.entity.ElectricityRecord;
 import com.zys.elec.service.ElectricityRecordService;
 
 import java.time.LocalDate;
@@ -15,7 +14,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,7 +48,8 @@ public class ElectricityRecordController {
         return ResponseResult.success(ElectricityRecordDTO.fromEntity(result.getData()));
     }
 
-    // example: http://localhost:8080/electricity-record/querybyrange?userId=1&startDate=2021-01-01&endDate=2021-12-31
+    // example:
+    // http://localhost:8080/electricity-record/querybyrange?userId=1&startDate=2021-01-01&endDate=2021-12-31
     @GetMapping("/querybyrange")
     @ResponseBody
     public ResponseResult<List<ElectricityRecordDTO>> getElectricityRecordByUserIdAndDateRange(

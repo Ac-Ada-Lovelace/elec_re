@@ -3,6 +3,8 @@ package com.zys.elec.config;
 
 import com.zys.elec.interceptor.JWTInterceptor;
 
+import jakarta.annotation.Nonnull;
+
 import org.springframework.lang.NonNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +27,14 @@ public class WebConfig implements WebMvcConfigurer {
         // .excludePathPatterns("/login/**", "/signup/**", "/error/**"); //
         // 凡是以这些开头的请求路径都不会会被拦截
         // System.out.println("拦截器注册成功");
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 }

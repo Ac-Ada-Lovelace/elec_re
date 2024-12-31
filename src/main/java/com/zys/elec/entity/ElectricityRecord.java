@@ -5,6 +5,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "electricity_records")
@@ -30,4 +31,7 @@ public class ElectricityRecord {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "electricityRecord")
+    private List<Predict> predicts; // 与Predict的关系
 }

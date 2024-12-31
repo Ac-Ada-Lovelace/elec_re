@@ -18,10 +18,11 @@ public class JWTAuthServiceImpl implements JWTAuthService {
     private static final long EXPIRATION_TIME = 86400000; // 1 day in milliseconds
 
     @Override
-    public String generateToken(String username, String captcha) {
+    public String generateToken(String username, String userId, String captcha) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
         return JWT.create()
                 .withSubject(username)
+                .withClaim("userId", userId)
                 .withClaim("captcha", captcha)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -44,5 +45,11 @@ public class JWTAuthServiceImpl implements JWTAuthService {
     public String getUsernameFromToken(String token) {
         DecodedJWT decodedJWT = JWT.decode(token);
         return decodedJWT.getSubject();
+    }
+
+    @Override
+    public String getUserIdFromToken(String token) {
+        DecodedJWT decodedJWT = JWT.decode(token);
+        return decodedJWT.getClaim("userId").asString();
     }
 }

@@ -1,13 +1,17 @@
 package com.zys.elec.service.impl;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zys.elec.common.ServiceResult;
+import com.zys.elec.dto.ElectricityRecordDTO;
 import com.zys.elec.dto.ElectricityRecordUploadDTO;
 import com.zys.elec.entity.ElectricityRecord;
 import com.zys.elec.entity.User;
@@ -92,11 +96,12 @@ public class ElectricityRecordImpl implements ElectricityRecordService {
         User user = new User();
         user.setId(userId);
 
-        Optional<ElectricityRecord> electricityRecords = electricityRecordRepository.findByUser(user);
+       var electricityRecords = electricityRecordRepository.findByUser(user);
         if (electricityRecords.isPresent()) {
-            return ServiceResult.success(List.of(electricityRecords.get()));
+            return ServiceResult.success(electricityRecords.get());
         }
         return ServiceResult.failure("Electricity record not found");
+        
     }
 
     @Override
@@ -153,6 +158,84 @@ public class ElectricityRecordImpl implements ElectricityRecordService {
 
     }
 
-    // CRUD
+    @Override
+    public ServiceResult<List<ElectricityRecord>> getRecordsWithoutPredicts() {
+        var electricityRecords = electricityRecordRepository.findRecordsWithoutPredicts();
+
+        if (electricityRecords.isPresent()) {
+            return ServiceResult.success(electricityRecords.get());
+        }
+
+        return ServiceResult.failure("Electricity record not found");
+    }
+
+    @Override
+    public ServiceResult<Map<String, ElectricityRecordDTO>> getConsumptionByDayOfWeek(Long userId, LocalDate startDate,
+            LocalDate endDate) {
+        var user = userService.getUserById(userId).getData().toEntity();
+        if (user == null) {
+            return ServiceResult.failure("User not found");
+        }
+
+        var records = electricityRecordRepository.findByRecordDateBetweenAndUser(startDate, endDate, user);
+        if (records.isEmpty()) {
+            return ServiceResult.failure("No records found");
+        }
+
+        Map<String, ElectricityRecordDTO> consumptionByDayOfWeek = new HashMap<>();
+        // pre add all days of week
+        for (int i = 1; i <= 7; i++) {
+            var dayOfWeek = String.valueOf(i);
+            consumptionByDayOfWeek.put(dayOfWeek, new ElectricityRecordDTO());
+        }
+        
+        for (ElectricityRecord record : records.get()) {
+            var dayOfWeek = String.valueOf(record.getRecordDate().getDayOfWeek().getValue());
+            var dto = consumptionByDayOfWeek.get(dayOfWeek);
+            if (dto.getElectricityRecord() == null) {
+                dto.setElectricityRecord(new ElectricityRecord());
+                dto.getElectricityRecord().setElectricityConsumed(BigDecimal.ZERO);
+            }
+            dto.getElectricityRecord().setElectricityConsumed(
+                    dto.getElectricityRecord().getElectricityConsumed().add(record.getElectricityConsumed()));
+        }
+
+        return ServiceResult.success(consumptionByDayOfWeek);
+    }
+
+    @Override
+    public ServiceResult<Map<String, ElectricityRecordDTO>> getConsumptionByDayOfWeek(Long userId) {
+        var user = userService.getUserById(userId).getData().toEntity();
+        if (user == null) {
+            return ServiceResult.failure("User not found");
+        }
+
+        var records = electricityRecordRepository.findByUser(user);
+        if (records.isEmpty()) {
+            return ServiceResult.failure("No records found");
+        }
+
+        Map<String, ElectricityRecordDTO> consumptionByDayOfWeek = new HashMap<>();
+        // pre add all days of week
+        for (int i = 1; i <= 7; i++) {
+            var dayOfWeek = String.valueOf(i);
+            consumptionByDayOfWeek.put(dayOfWeek, new ElectricityRecordDTO());
+        }
+
+        for (ElectricityRecord record : records.get()) {
+            var dayOfWeek = String.valueOf(record.getRecordDate().getDayOfWeek().getValue());
+            var dto = consumptionByDayOfWeek.get(dayOfWeek);
+            if (dto.getElectricityRecord() == null) {
+                dto.setElectricityRecord(new ElectricityRecord());
+                dto.getElectricityRecord().setElectricityConsumed(BigDecimal.ZERO);
+            }
+            dto.getElectricityRecord().setElectricityConsumed(
+                    dto.getElectricityRecord().getElectricityConsumed().add(record.getElectricityConsumed()));
+        }
+
+        return ServiceResult.success(consumptionByDayOfWeek);
+    }
+
+
 
 }

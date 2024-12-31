@@ -2,8 +2,11 @@ package com.zys.elec.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 import com.zys.elec.common.ServiceResult;
+import com.zys.elec.dto.ElectricityRecordDTO;
 import com.zys.elec.dto.ElectricityRecordUploadDTO;
 import com.zys.elec.entity.ElectricityRecord;
 
@@ -30,4 +33,10 @@ public interface ElectricityRecordService {
 
     ServiceResult<List<ElectricityRecord>> getByDateRangeAndUserId(LocalDate startDate, LocalDate endDate, Long userId);
 
+    ServiceResult<List<ElectricityRecord>> getRecordsWithoutPredicts();
+
+
+    ServiceResult<Map<String, ElectricityRecordDTO>> getConsumptionByDayOfWeek(Long userId, LocalDate startDate, LocalDate endDate);
+
+    ServiceResult<Map<String, ElectricityRecordDTO>> getConsumptionByDayOfWeek(Long userId);
 }

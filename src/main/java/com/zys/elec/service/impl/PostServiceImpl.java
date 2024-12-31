@@ -48,7 +48,7 @@ public class PostServiceImpl implements PostService {
         }
 
         var post = postOpt.get();
-        post.setIsDeleted(true);
+        post.setDeleted(true);
         postRepository.save(post);
         return ServiceResult.success(null);
     }

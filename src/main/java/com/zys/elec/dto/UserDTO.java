@@ -14,8 +14,8 @@ public class UserDTO {
     private byte[] avatar;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private boolean isDeleted;
 
+    private String jwt;
     public static UserDTO fromEntity(User user) {
         var userDTO = new UserDTO();
         userDTO.setId(user.getId());
@@ -23,7 +23,6 @@ public class UserDTO {
         userDTO.setAvatar(user.getAvatar());
         userDTO.setCreatedAt(user.getCreatedAt());
         userDTO.setUpdatedAt(user.getUpdatedAt());
-        userDTO.setDeleted(user.isDeleted());
         return userDTO;
     }
 
@@ -34,7 +33,6 @@ public class UserDTO {
         user.setAvatar(this.avatar);
         user.setCreatedAt(this.createdAt);
         user.setUpdatedAt(this.updatedAt);
-        user.setDeleted(this.isDeleted);
         return user;
     }
     // getters and setters

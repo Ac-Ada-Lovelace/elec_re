@@ -10,6 +10,7 @@ import com.zys.elec.service.ElectricityRecordService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -66,5 +67,16 @@ public class ElectricityRecordController {
         return ResponseResult.success(electricityRecordDTOs);
 
     }
+
+    @GetMapping("/querybydayofweek")
+    public ResponseResult<Map<String, ElectricityRecordDTO>> getElectricityRecordByDayOfWeek(@RequestParam String userId) {
+        var res = electricityRecordService.getConsumptionByDayOfWeek(Long.parseLong(userId));
+        if (res.isSuccess()) {
+            return ResponseResult.success(res.getData());
+        }
+        return ResponseResult.failure(res.getMessage());
+
+    }
+    
 
 }

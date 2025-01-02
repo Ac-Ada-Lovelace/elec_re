@@ -17,6 +17,7 @@ import io.micrometer.common.lang.NonNull;
 
 @RestController
 @RequestMapping("/login")
+@CrossOrigin(origins = "http://localhost:9528")
 public class LoginController {
 
     @Autowired

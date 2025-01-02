@@ -1,6 +1,7 @@
 package com.zys.elec.service;
 
 import com.zys.elec.common.ServiceResult;
+import com.zys.elec.dto.UserDTO;
 import com.zys.elec.entity.Follow;
 import com.zys.elec.entity.User;
 
@@ -16,4 +17,7 @@ public interface FollowService {
     ServiceResult<List<Follow>> getFollowees(User follower);
 
     ServiceResult<Boolean> isFollowing(User follower, User followee);
+
+    ServiceResult<List<UserDTO>> getFollowers(long userId);
+    
 }

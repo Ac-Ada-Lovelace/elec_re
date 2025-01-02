@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zys.elec.common.ServiceResult;
+import com.zys.elec.dto.UserDTO;
 import com.zys.elec.entity.Follow;
 import com.zys.elec.entity.User;
+import com.zys.elec.repository.FollowRepository;
+import com.zys.elec.repository.UserRepository;
 import com.zys.elec.service.FollowService;
 import com.zys.elec.service.UserService;
 
@@ -16,6 +19,12 @@ public class FollowServiceImpl implements FollowService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FollowRepository followRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public ServiceResult<Follow> followUser(User follower, User followee) {
@@ -90,6 +99,20 @@ public class FollowServiceImpl implements FollowService {
         } else {
             return ServiceResult.failure("Failed to check if following");
         }
+    }
+
+    @Override
+    public ServiceResult<List<UserDTO>> getFollowers(long userId) {
+        var user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            return ServiceResult.failure("User not found");
+        }
+        var res = followRepository.findByFollowee(user.get());
+        // get followers
+        var followers = res.get().stream().map(f -> f.getFollower()).toList();
+        var followersDTO = followers.stream().map(UserDTO::fromEntity).toList();
+
+        return ServiceResult.success(followersDTO);
     }
 
 }

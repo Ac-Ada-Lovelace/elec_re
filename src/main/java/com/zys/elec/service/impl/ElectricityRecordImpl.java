@@ -16,6 +16,7 @@ import com.zys.elec.dto.ElectricityRecordUploadDTO;
 import com.zys.elec.entity.ElectricityRecord;
 import com.zys.elec.entity.User;
 import com.zys.elec.repository.ElectricityRecordRepository;
+import com.zys.elec.repository.PredictRepository;
 import com.zys.elec.service.ElectricityRecordService;
 import com.zys.elec.service.UserService;
 
@@ -23,6 +24,10 @@ import com.zys.elec.service.UserService;
 public class ElectricityRecordImpl implements ElectricityRecordService {
     @Autowired
     private ElectricityRecordRepository electricityRecordRepository;
+
+    @Autowired
+    private PredictRepository predictRepository;
+
 
     @Autowired
     private UserService userService;

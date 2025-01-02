@@ -1,5 +1,7 @@
 package com.zys.elec.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zys.elec.common.ResponseResult;
+import com.zys.elec.dto.UserDTO;
 import com.zys.elec.entity.User;
 import com.zys.elec.service.FollowService;
 
@@ -50,7 +53,8 @@ public class FollowController {
     @GetMapping("/followers")
     @ResponseBody
     public ResponseResult<List<UserDTO>> getFollowersCount(@RequestParam Long userId) {
-        var result = followService.getFollowees();
+        var result = followService.getFollowers(userId);
+
         if (result.isSuccess()) {
             return ResponseResult.success(result.getData());
         } else {

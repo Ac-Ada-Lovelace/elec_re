@@ -71,10 +71,11 @@ public class MessageServiceImpl implements MessageService {
         try {
             savedMessage = messageRepository.save(message);
         } catch (Exception e) {
-            return new ServiceResult<>(false, "Failed to send message: " + e.getMessage(), 0L);
+            return ServiceResult.failure("Failed to send message: " + e.getMessage());
+            // return new ServiceResult<>(false, "Failed to send message: " + e.getMessage(), 0L);
         }
-
-        return new ServiceResult<>(true, "Message sent", savedMessage.getId());
+        return ServiceResult.success(savedMessage.getId());
+        // return new ServiceResult<>(true, "Message sent", savedMessage.getId());
     }
 
     @Override

@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(@NonNull InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
-                .excludePathPatterns("/**"); // 拦截所有请求
+                .excludePathPatterns("/**");
 
         // registry.addInterceptor(jwtInterceptor)
         // .addPathPatterns("/**") // 拦截所有请求
@@ -30,11 +30,13 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
+    public void addCorsMappings(@NonNull CorsRegistry registry) {
+        System.err.println("addCorsMappings");
+        System.out.println("addCorsMappings");
         registry.addMapping("/**")
                 .allowedOriginPatterns("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowedHeaders("*")
-                .allowCredentials(true);
+                .allowedHeaders("*").allowCredentials(true).allowPrivateNetwork(true);
+                
     }
 }

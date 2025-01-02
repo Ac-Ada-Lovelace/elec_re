@@ -1,6 +1,7 @@
 package com.zys.elec.controller;
 
 import com.zys.elec.common.ResponseResult;
+import com.zys.elec.dto.ConversationDTO;
 import com.zys.elec.dto.MessageDTO;
 import com.zys.elec.entity.Message;
 import com.zys.elec.service.MessageService;
@@ -21,9 +22,9 @@ public class MessageController {
     private MessageService messageService;
 
     @GetMapping("/conversation")
-    public ResponseResult<List<Message>> getConversation(@NonNull @RequestParam Long senderId,
+    public ResponseResult<ConversationDTO> getConversation(@NonNull @RequestParam Long senderId,
             @NonNull @RequestParam Long receiverId) {
-        var res = messageService.getConversation(senderId, receiverId);
+        var res = messageService.getConversationDTO(senderId, receiverId);
 
         if (res.isSuccess()) {
             return ResponseResult.success(res.getData());
@@ -33,6 +34,7 @@ public class MessageController {
         }
 
     }
+
 
     @PostMapping("/send")
     public ResponseResult<Long> sendMessage(@NonNull @RequestBody MessageDTO message) {

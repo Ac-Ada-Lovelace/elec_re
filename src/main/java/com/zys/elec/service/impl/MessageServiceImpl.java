@@ -46,6 +46,7 @@ public class MessageServiceImpl implements MessageService {
     public ServiceResult<Long> sendMessage(Message message) {
         // Validate message timestamp, not null, not in the future, not more than 3
         // minutes in the past
+        message.setSentAt(message.getSentAt() == null ? LocalDateTime.now() : message.getSentAt());
         final LocalDateTime sentAt = message.getSentAt();
 
         if (sentAt == null) {

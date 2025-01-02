@@ -1,6 +1,8 @@
 package com.zys.elec.service.impl;
 
 import com.zys.elec.common.ServiceResult;
+import com.zys.elec.dto.ConversationDTO;
+import com.zys.elec.dto.MessageDTO;
 import com.zys.elec.entity.Message;
 import com.zys.elec.repository.MessageRepository;
 import com.zys.elec.service.MessageService;
@@ -69,10 +71,11 @@ public class MessageServiceImpl implements MessageService {
         try {
             savedMessage = messageRepository.save(message);
         } catch (Exception e) {
-            return new ServiceResult<>(false, "Failed to send message: " + e.getMessage(), 0L);
+            return ServiceResult.failure("Failed to send message: " + e.getMessage());
+            // return new ServiceResult<>(false, "Failed to send message: " + e.getMessage(), 0L);
         }
-
-        return new ServiceResult<>(true, "Message sent", savedMessage.getId());
+        return ServiceResult.success(savedMessage.getId());
+        // return new ServiceResult<>(true, "Message sent", savedMessage.getId());
     }
 
     @Override
@@ -142,6 +145,19 @@ public class MessageServiceImpl implements MessageService {
         } else {
             return new ServiceResult<>(false, "Cannot delete message after 3 minutes", false);
         }
+    }
+
+    @Override
+    public ServiceResult<ConversationDTO> getConversationDTO(Long senderId, Long receiverId) {
+        var messages = getConversation(senderId, receiverId).getData();
+
+        if (messages == null) {
+            return new ServiceResult<>(false, "No messages found", null);
+        }
+        var messagesDTO = messages.stream().map(MessageDTO::fromEntity).toList();
+        var conversationDTO = new ConversationDTO();
+        conversationDTO.setMessages(messagesDTO);
+        return new ServiceResult<>(true, "Conversation found", conversationDTO);
     }
 
 }

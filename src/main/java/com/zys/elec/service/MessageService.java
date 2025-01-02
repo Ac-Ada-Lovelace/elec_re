@@ -1,6 +1,7 @@
 package com.zys.elec.service;
 
 import com.zys.elec.common.ServiceResult;
+import com.zys.elec.dto.ConversationDTO;
 import com.zys.elec.entity.Message;
 import java.util.List;
 
@@ -20,4 +21,7 @@ public interface MessageService {
     ServiceResult<Integer> getUnreadMessagesCountToUserFromSpecUser(Long userId, Long senderId);
 
     ServiceResult<Boolean> deleteMessageIfSentWithin3Minutes(Long messageId);
+
+
+    ServiceResult<ConversationDTO> getConversationDTO(Long senderId, Long receiverId);
 }

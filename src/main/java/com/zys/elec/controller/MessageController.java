@@ -3,6 +3,7 @@ package com.zys.elec.controller;
 import com.zys.elec.common.ResponseResult;
 import com.zys.elec.dto.ConversationDTO;
 import com.zys.elec.dto.MessageDTO;
+import com.zys.elec.dto.SendDTO;
 import com.zys.elec.entity.Message;
 import com.zys.elec.service.MessageService;
 
@@ -35,15 +36,21 @@ public class MessageController {
 
     }
 
-
     @PostMapping("/send")
-    public ResponseResult<Long> sendMessage(@NonNull @RequestBody MessageDTO message) {
+    public ResponseResult<Long> sendMessage(@NonNull @RequestBody SendDTO message) {
 
-        if(message.getContent().isEmpty()){
+        if (message.getContent().isEmpty()) {
             return ResponseResult.failure("Content is required");
         }
 
-        var messageEntity = message.toEntity();
+        var messageDTO = new MessageDTO();
+        messageDTO.setSenderId(message.getSenderId());
+        messageDTO.setReceiverId(message.getReceiverId());
+        messageDTO.setContent(message.getContent());
+        var localtime = java.time.LocalDateTime.now();
+        messageDTO.setSentAt(localtime);
+
+        var messageEntity = messageDTO.toEntity();
 
         // Validate sender and receiver
         var res = messageService.sendMessage(messageEntity);

@@ -11,11 +11,13 @@ import com.zys.elec.service.SignUpService;
 import io.micrometer.common.lang.NonNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/sign-up")
+@CrossOrigin(origins = "http://localhost:9528")
 public class SignUpController {
 
     @Autowired

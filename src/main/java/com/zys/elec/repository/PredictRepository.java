@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.zys.elec.entity.ElectricityRecord;
 import com.zys.elec.entity.Predict;
+import com.zys.elec.entity.User;
 
 public interface PredictRepository extends JpaRepository<Predict, Long> {
 
@@ -24,6 +25,8 @@ public interface PredictRepository extends JpaRepository<Predict, Long> {
 
     // method to find all predicts by date range and user id
     Optional<List<Predict>> findByTargetDateBetweenAndUserId(LocalDate startDate, LocalDate endDate, Long userId);
+
+    Optional<List<Predict>> findByUserAndTargetDate(User user, LocalDate recordDate);
 
 
 

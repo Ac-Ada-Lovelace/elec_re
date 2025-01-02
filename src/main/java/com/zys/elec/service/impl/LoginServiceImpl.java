@@ -24,7 +24,9 @@ public class LoginServiceImpl implements LoginService {
         // var un = user.getUsername();
         // var pw = user.getPassword();
         var res = userService.checkPassword(user.getUsername(), user.getPassword());
-
+        if (!res.isSuccess()){
+            return ServiceResult.failure(res.getMessage());
+        }
         var un = res.getData().getUsername();
         var uid = res.getData().getId();
         var captcha = user.getCaptcha();

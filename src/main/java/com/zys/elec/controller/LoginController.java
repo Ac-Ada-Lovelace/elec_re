@@ -15,7 +15,6 @@ import com.zys.elec.service.LoginService;
 
 import io.micrometer.common.lang.NonNull;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/login")
 public class LoginController {

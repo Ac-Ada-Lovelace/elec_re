@@ -34,7 +34,6 @@ public class ServiceResult<T> {
     }
 
     public T getData() {
-        // TODO Auto-generated method stub
         return data;
     }
 }

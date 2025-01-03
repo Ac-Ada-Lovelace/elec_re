@@ -22,8 +22,24 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+
     @GetMapping("/conversation")
-    public ResponseResult<ConversationDTO> getConversation(@NonNull @RequestParam Long senderId,
+    public ResponseResult<List<Message>> getConversation(@NonNull @RequestParam Long senderId,
+            @NonNull @RequestParam Long receiverId) {
+        var res = messageService.getConversation(senderId, receiverId);
+
+        if (res.isSuccess()) {
+            return ResponseResult.success(res.getData());
+        } else {
+            return ResponseResult.failure(res.getMessage());
+
+        }
+
+    }
+
+
+    @GetMapping("/conversationu")
+    public ResponseResult<ConversationDTO> getConversationu(@NonNull @RequestParam Long senderId,
             @NonNull @RequestParam Long receiverId) {
         var res = messageService.getConversationDTO(senderId, receiverId);
 

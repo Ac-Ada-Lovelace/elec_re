@@ -3,7 +3,6 @@ package com.zys.elec.config;
 
 import com.zys.elec.interceptor.JWTInterceptor;
 
-import jakarta.annotation.Nonnull;
 
 import org.springframework.lang.NonNull;
 

@@ -3,6 +3,7 @@ package com.zys.elec.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
 
 import com.zys.elec.entity.ElectricityRecord;
 import com.zys.elec.entity.Predict;
@@ -35,7 +36,7 @@ public class DataDTO {
     }
 
     private String username;
-    private String userId;
+    private long userId;
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean withPredict;
@@ -61,5 +62,12 @@ public class DataDTO {
         resultUnit.setPredict(predictDataUnit);
 
         result.add(resultUnit);
+    }
+
+    public void init(){
+        // Initialize the result list
+        if(result == null){
+            result = new ArrayList<>();
+        }
     }
 }

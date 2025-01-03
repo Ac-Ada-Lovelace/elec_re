@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.zys.elec.common.ServiceResult;
 import com.zys.elec.dto.DataDTO;
+import com.zys.elec.dto.DataDTO.ResultUnit;
 import com.zys.elec.entity.ElectricityRecord;
 import com.zys.elec.entity.Predict;
 import com.zys.elec.entity.User;
@@ -30,7 +31,7 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public ServiceResult<DataDTO> getData(DataDTO dataDTO) {
-        User user = userRepository.findById(Long.parseLong(dataDTO.getUserId())).orElse(null);
+        User user = userRepository.findById(dataDTO.getUserId()).orElse(null);
         if (user == null) {
             return ServiceResult.failure("User not found");
         }
@@ -38,6 +39,7 @@ public class DataServiceImpl implements DataService {
         List<ElectricityRecord> records = electricityRecordRepository.findByRecordDateBetweenAndUser(
                 dataDTO.getStartDate(), dataDTO.getEndDate(), user).orElse(Collections.emptyList());
 
+        dataDTO.init();
         for (ElectricityRecord record : records) {
             Predict predict = null;
             if (dataDTO.isWithPredict()) {
@@ -45,8 +47,9 @@ public class DataServiceImpl implements DataService {
                 if (res.isPresent()) {
                     predict = res.get().get(0);
                 }
-                
+
             }
+
             dataDTO.addData(record, predict);
         }
 

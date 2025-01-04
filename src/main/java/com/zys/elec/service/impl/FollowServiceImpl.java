@@ -115,4 +115,16 @@ public class FollowServiceImpl implements FollowService {
         return ServiceResult.success(followersDTO);
     }
 
+    @Override
+    public ServiceResult<List<UserDTO>> getFollowees(long userId) {
+        var user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            return ServiceResult.failure("User not found");
+        }
+        var res = followRepository.findByFollower(user.get());
+        // get followees
+        var followees = res.get().stream().map(f -> f.getFollowee()).toList();
+        var followeesDTO = followees.stream().map(UserDTO::fromEntity).toList();
+        return ServiceResult.success(followeesDTO);
+    }
 }

@@ -65,4 +65,15 @@ public class FollowController {
             return ResponseResult.failure(result.getMessage());
         }
     }
+
+    @GetMapping("/getfollowees")
+    @ResponseBody
+    public ResponseResult<List<UserDTO>> getFollowees(@RequestParam Long userId) {
+        var result = followService.getFollowees(userId);
+        if (result.isSuccess()) {
+            return ResponseResult.success(result.getData());
+        } else {
+            return ResponseResult.failure(result.getMessage());
+        }
+    }
 }

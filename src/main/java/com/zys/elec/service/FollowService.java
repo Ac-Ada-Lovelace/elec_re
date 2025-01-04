@@ -19,5 +19,7 @@ public interface FollowService {
     ServiceResult<Boolean> isFollowing(User follower, User followee);
 
     ServiceResult<List<UserDTO>> getFollowers(long userId);
+
+    ServiceResult<List<UserDTO>> getFollowees(long userId);
     
 }

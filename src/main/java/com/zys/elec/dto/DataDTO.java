@@ -40,6 +40,8 @@ public class DataDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean withPredict;
+    private String predictStrategy;
+
     private List<ResultUnit> result;
 
     public void addData(ElectricityRecord record, Predict predict) {

@@ -43,7 +43,10 @@ public class DataServiceImpl implements DataService {
         for (ElectricityRecord record : records) {
             Predict predict = null;
             if (dataDTO.isWithPredict()) {
-                var res = predictRepository.findByUserAndTargetDate(user, record.getRecordDate());
+                var res = predictRepository.findByUserAndTargetDateAndStrategy(user, record.getRecordDate(),
+                        dataDTO.getPredictStrategy());
+                // var res = predictRepository.findByUserAndTargetDate(user,
+                // record.getRecordDate());
                 if (res.isPresent()) {
                     predict = res.get().get(0);
                 }

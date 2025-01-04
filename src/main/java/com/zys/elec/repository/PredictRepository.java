@@ -10,7 +10,6 @@ import com.zys.elec.entity.User;
 
 public interface PredictRepository extends JpaRepository<Predict, Long> {
 
-    
     // method to find all predicts by user id
     Optional<List<Predict>> findByUserId(Long userId);
 
@@ -25,6 +24,6 @@ public interface PredictRepository extends JpaRepository<Predict, Long> {
 
     Optional<List<Predict>> findByUserAndTargetDate(User user, LocalDate recordDate);
 
-
+    Optional<List<Predict>> findByUserAndTargetDateAndStrategy(User user, LocalDate recordDate, String predictStrategy);
 
 }

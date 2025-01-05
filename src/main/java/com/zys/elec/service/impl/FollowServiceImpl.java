@@ -40,13 +40,12 @@ public class FollowServiceImpl implements FollowService {
             return ServiceResult.failure("Already following");
         }
 
-        ServiceResult<Follow> followResult = followUser(follower, followee);
-        if (followResult.isSuccess()) {
-            return ServiceResult.success(followResult.getData());
-        } else {
-            return ServiceResult.failure("Failed to follow user");
-        }
+        var follow = new Follow();
+        follow.setFollower(follower);
+        follow.setFollowee(followee);
 
+        var followResult = followRepository.save(follow);
+        return ServiceResult.success(followResult);
     }
 
     @Override
@@ -93,12 +92,14 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public ServiceResult<Boolean> isFollowing(User follower, User followee) {
-        var isFollowing = isFollowing(follower, followee);
-        if (isFollowing.isSuccess()) {
-            return ServiceResult.success(isFollowing.getData());
+
+        var follow = followRepository.findByFollowerAndFollowee(follower, followee);
+        if (follow.isEmpty()) {
+            return ServiceResult.failure("Not following");
         } else {
-            return ServiceResult.failure("Failed to check if following");
+            return ServiceResult.success(true);
         }
+
     }
 
     @Override
@@ -126,5 +127,58 @@ public class FollowServiceImpl implements FollowService {
         var followees = res.get().stream().map(f -> f.getFollowee()).toList();
         var followeesDTO = followees.stream().map(UserDTO::fromEntity).toList();
         return ServiceResult.success(followeesDTO);
+    }
+
+    @Override
+    public ServiceResult<Follow> followUser(long followerId, long followeeId) {
+        User follower = userRepository.findById(followerId).orElse(null);
+        if (follower == null) {
+            return ServiceResult.failure("Follower not found");
+        }
+        User followee = userRepository.findById(followeeId).orElse(null);
+        if (followee == null) {
+            return ServiceResult.failure("Followee not found");
+        }
+
+        var alreadyFollowing = followRepository.findByFollowerAndFollowee(follower, followee);
+        if (alreadyFollowing.get().size() > 0) {
+            return ServiceResult.failure("Already following");
+        }
+
+        var follow = new Follow();
+        follow.setFollower(follower);
+        follow.setFollowee(followee);
+        try {
+            var followResult = followRepository.save(follow);
+
+            return ServiceResult.success(followResult);
+        } catch (Exception e) {
+            return ServiceResult.failure("Failed to follow user");
+        }
+    }
+
+    @Override
+    public ServiceResult<Void> unfollowUser(long followerId, long followeeId) {
+        User follower = userRepository.findById(followerId).orElse(null);
+        if (follower == null) {
+            return ServiceResult.failure("Follower not found");
+        }
+        User followee = userRepository.findById(followeeId).orElse(null);
+        if (followee == null) {
+            return ServiceResult.failure("Followee not found");
+        }
+
+        var follow = followRepository.findByFollowerAndFollowee(follower, followee);
+        if (follow.isEmpty()) {
+            return ServiceResult.failure("Not following");
+        }
+
+        try {
+            followRepository.delete(follow.get().get(0));
+            return ServiceResult.success(null);
+        } catch (Exception e) {
+            return ServiceResult.failure("Failed to unfollow user");
+        }
+
     }
 }

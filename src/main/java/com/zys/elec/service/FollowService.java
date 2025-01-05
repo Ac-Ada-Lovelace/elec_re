@@ -22,4 +22,7 @@ public interface FollowService {
 
     ServiceResult<List<UserDTO>> getFollowees(long userId);
     
+    ServiceResult<Follow> followUser(long followerId, long followeeId);
+
+    ServiceResult<Void> unfollowUser(long followerId, long followeeId);
 }

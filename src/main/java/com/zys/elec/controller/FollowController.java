@@ -26,11 +26,8 @@ public class FollowController {
     @PostMapping("/follow")
     @ResponseBody
     public ResponseResult<Void> followUser(@RequestParam Long followerId, @RequestParam Long followeeId) {
-        var follower = new User();
-        follower.setId(followerId);
-        var followee = new User();
-        followee.setId(followeeId);
-        var result = followService.followUser(follower, followee);
+
+        var result = followService.followUser(followerId, followeeId);
         if (result.isSuccess()) {
             return ResponseResult.success(null);
         } else {
@@ -42,11 +39,8 @@ public class FollowController {
     @PostMapping("/unfollow")
     @ResponseBody
     public ResponseResult<Void> unfollowUser(@RequestParam Long followerId, @RequestParam Long followeeId) {
-        var follower = new User();
-        follower.setId(followerId);
-        var followee = new User();
-        followee.setId(followeeId);
-        var result = followService.unfollowUser(follower, followee);
+
+        var result = followService.unfollowUser(followerId, followeeId);
         if (result.isSuccess()) {
             return ResponseResult.success(null);
         } else {

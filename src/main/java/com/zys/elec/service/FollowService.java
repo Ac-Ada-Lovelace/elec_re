@@ -8,9 +8,9 @@ import com.zys.elec.entity.User;
 import java.util.List;
 
 public interface FollowService {
-    ServiceResult<Follow> followUser(User follower, User followee);
+    // ServiceResult<Follow> followUser(User follower, User followee);
 
-    ServiceResult<Void> unfollowUser(User follower, User followee);
+    // ServiceResult<Void> unfollowUser(User follower, User followee);
 
     ServiceResult<List<Follow>> getFollowers(User followee);
 
@@ -21,7 +21,7 @@ public interface FollowService {
     ServiceResult<List<UserDTO>> getFollowers(long userId);
 
     ServiceResult<List<UserDTO>> getFollowees(long userId);
-    
+
     ServiceResult<Follow> followUser(long followerId, long followeeId);
 
     ServiceResult<Void> unfollowUser(long followerId, long followeeId);

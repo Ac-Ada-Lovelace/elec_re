@@ -26,49 +26,49 @@ public class FollowServiceImpl implements FollowService {
     @Autowired
     private UserRepository userRepository;
 
-    @Override
-    public ServiceResult<Follow> followUser(User follower, User followee) {
-        if (!userService.getUserById(follower.getId()).isSuccess()) {
-            return ServiceResult.failure("Follower does not exist");
-        }
-
-        if (!userService.getUserById(followee.getId()).isSuccess()) {
-            return ServiceResult.failure("Followee does not exist");
-        }
-
-        if (isFollowing(follower, followee).isSuccess()) {
-            return ServiceResult.failure("Already following");
-        }
-
-        var follow = new Follow();
-        follow.setFollower(follower);
-        follow.setFollowee(followee);
-
-        var followResult = followRepository.save(follow);
-        return ServiceResult.success(followResult);
-    }
-
-    @Override
-    public ServiceResult<Void> unfollowUser(User follower, User followee) {
-        if (!userService.getUserById(follower.getId()).isSuccess()) {
-            return ServiceResult.failure("Follower does not exist");
-        }
-
-        if (!userService.getUserById(followee.getId()).isSuccess()) {
-            return ServiceResult.failure("Followee does not exist");
-        }
-
-        if (!isFollowing(follower, followee).isSuccess()) {
-            return ServiceResult.failure("Not following");
-        }
-
-        ServiceResult<Void> unfollowResult = unfollowUser(follower, followee);
-        if (unfollowResult.isSuccess()) {
-            return ServiceResult.success(null);
-        } else {
-            return ServiceResult.failure("Failed to unfollow user");
-        }
-    }
+    // @Override
+    // public ServiceResult<Follow> followUser(User follower, User followee) {
+    // if (!userService.getUserById(follower.getId()).isSuccess()) {
+    // return ServiceResult.failure("Follower does not exist");
+    // }
+    //
+    // if (!userService.getUserById(followee.getId()).isSuccess()) {
+    // return ServiceResult.failure("Followee does not exist");
+    // }
+    //
+    // if (isFollowing(follower, followee).isSuccess()) {
+    // return ServiceResult.failure("Already following");
+    // }
+    //
+    // var follow = new Follow();
+    // follow.setFollower(follower);
+    // follow.setFollowee(followee);
+    //
+    // var followResult = followRepository.save(follow);
+    // return ServiceResult.success(followResult);
+    // }
+    //
+    // @Override
+    // public ServiceResult<Void> unfollowUser(User follower, User followee) {
+    // if (!userService.getUserById(follower.getId()).isSuccess()) {
+    // return ServiceResult.failure("Follower does not exist");
+    // }
+    //
+    // if (!userService.getUserById(followee.getId()).isSuccess()) {
+    // return ServiceResult.failure("Followee does not exist");
+    // }
+    //
+    // if (!isFollowing(follower, followee).isSuccess()) {
+    // return ServiceResult.failure("Not following");
+    // }
+    //
+    // ServiceResult<Void> unfollowResult = unfollowUser(follower, followee);
+    // if (unfollowResult.isSuccess()) {
+    // return ServiceResult.success(null);
+    // } else {
+    // return ServiceResult.failure("Failed to unfollow user");
+    // }
+    // }
 
     @Override
     public ServiceResult<List<Follow>> getFollowers(User followee) {

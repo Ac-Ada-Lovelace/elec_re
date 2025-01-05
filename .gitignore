@@ -35,3 +35,4 @@ build/
 .fake
 
 /src/main/resources/application.properties
+/bin

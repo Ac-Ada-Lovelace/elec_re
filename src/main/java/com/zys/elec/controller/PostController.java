@@ -59,6 +59,18 @@ public class PostController {
         }
     }
 
+    @PostMapping("/post/get")
+    @ResponseBody
+    public ResponseResult<Post> listPosts(@RequestParam Long userId) {
+        var result = postService.getPostById(userId);
+
+        if (result.isSuccess()) {
+            return ResponseResult.success(result.getData());
+        } else {
+            return ResponseResult.failure(result.getMessage());
+        }
+    }
+
 //    // 点赞
 //    @PostMapping("/post/like")
 //    @ResponseBody

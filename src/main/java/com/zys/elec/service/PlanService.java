@@ -15,5 +15,8 @@ public interface PlanService {
 
     ServiceResult<List<Plan>> listPlans(Long userId);
 
+    ServiceResult<Void> cancelPlan(Long planId, Long userId);
+
+    ServiceResult<Void> completePlan(Long planId);
 
 }

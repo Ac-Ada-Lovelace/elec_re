@@ -49,23 +49,6 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public ServiceResult<Void> updatePlanContent(Long planId, String newContent) {
-        var plan = planRepository.findById(planId);
-        if (plan.isEmpty()) {
-            return ServiceResult.failure("Plan not found");
-        }
-
-        var updatedPlan = plan.get();
-        try {
-
-            planRepository.save(updatedPlan);
-            return ServiceResult.success(null);
-        } catch (Exception e) {
-            return ServiceResult.failure(e.getMessage());
-        }
-    }
-
-    @Override
     public ServiceResult<Void> deletePlan(Long planId) {
         var plan = planRepository.findById(planId);
         if (plan.isEmpty()) {
@@ -118,6 +101,21 @@ public class PlanServiceImpl implements PlanService {
             var p = plan.get();
             p.setStatus(Plan.Status.COMPLETED);
             planRepository.save(p);
+            return ServiceResult.success(null);
+        } catch (Exception e) {
+            return ServiceResult.failure(e.getMessage());
+        }
+    }
+
+    @Override
+    public ServiceResult<Void> updatePlanContent(Plan plan) {
+        var p = planRepository.findById(plan.getId());
+        if(p.isEmpty()) {
+            return ServiceResult.failure("Plan not found");
+        }
+
+        try {
+            planRepository.save(plan);
             return ServiceResult.success(null);
         } catch (Exception e) {
             return ServiceResult.failure(e.getMessage());

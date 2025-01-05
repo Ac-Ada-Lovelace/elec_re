@@ -8,7 +8,7 @@ import com.zys.elec.entity.Plan;
 public interface PlanService {
     ServiceResult<Void> createPlan(  Plan plan);
     
-    ServiceResult<Void> updatePlanContent(Long planId, String newContent);
+    ServiceResult<Void> updatePlanContent(Plan plan);
 
     ServiceResult<Void> deletePlan(Long planId);
 

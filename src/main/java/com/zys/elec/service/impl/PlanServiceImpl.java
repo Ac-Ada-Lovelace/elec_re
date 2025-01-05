@@ -37,34 +37,91 @@ public class PlanServiceImpl implements PlanService {
 
     }
 
-
-
     @Override
     public com.zys.elec.common.ServiceResult<List<Plan>> listPlans(Long userId) {
         var user = userService.getUserById(userId);
-        if(!user.isSuccess()) {
+        if (!user.isSuccess()) {
             return ServiceResult.failure("User not found");
         }
 
         var plans = planRepository.findByUserId(userId);
-        
-        return ServiceResult.success(plans);
+        return ServiceResult.success(plans.orElse(null));
     }
-
-
 
     @Override
     public ServiceResult<Void> updatePlanContent(Long planId, String newContent) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updatePlanContent'");
+        var plan = planRepository.findById(planId);
+        if (plan.isEmpty()) {
+            return ServiceResult.failure("Plan not found");
+        }
+
+        var updatedPlan = plan.get();
+        try {
+
+            planRepository.save(updatedPlan);
+            return ServiceResult.success(null);
+        } catch (Exception e) {
+            return ServiceResult.failure(e.getMessage());
+        }
     }
-
-
 
     @Override
     public ServiceResult<Void> deletePlan(Long planId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deletePlan'");
+        var plan = planRepository.findById(planId);
+        if (plan.isEmpty()) {
+            return ServiceResult.failure("Plan not found");
+        }
+
+        try {
+            planRepository.deleteById(planId);
+            return ServiceResult.success(null);
+        } catch (Exception e) {
+            return ServiceResult.failure(e.getMessage());
+        }
+    }
+
+    @Override
+    public ServiceResult<Void> cancelPlan(Long planId, Long userId) {
+        if (!userService.getUserById(userId).isSuccess()) {
+            return ServiceResult.failure("User not found");
+        }
+
+        var plan = planRepository.findById(planId);
+        if(plan.isEmpty()) {
+            return ServiceResult.failure("Plan not found");
+        }
+
+        if(plan.get().getUserId() != userId) {
+            return ServiceResult.failure("User does not own the plan");
+        }
+
+        try {
+            var p = plan.get();
+            p.setStatus(Plan.Status.CANCELLED);
+            planRepository.save(p);
+            return ServiceResult.success(null);
+        } catch (Exception e) {
+            return ServiceResult.failure(e.getMessage());
+        }
+        
+
+    }
+
+    @Override
+    public ServiceResult<Void> completePlan(Long planId) {
+        var plan = planRepository.findById(planId);
+        if(plan.isEmpty()) {
+            return ServiceResult.failure("Plan not found");
+        }
+
+        try {
+            var p = plan.get();
+            p.setStatus(Plan.Status.COMPLETED);
+            planRepository.save(p);
+            return ServiceResult.success(null);
+        } catch (Exception e) {
+            return ServiceResult.failure(e.getMessage());
+        }
     }
 
 }

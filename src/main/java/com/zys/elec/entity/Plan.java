@@ -48,7 +48,7 @@ public class Plan {
         IN_PROGRESS,
         COMPLETED,
         FAILED,
-        CANCELLED
+        CANCELLED, OVERDUE
     }
     @PrePersist
     protected void onCreate() {

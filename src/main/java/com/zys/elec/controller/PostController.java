@@ -2,20 +2,24 @@ package com.zys.elec.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.zys.elec.common.ResponseResult;
 import com.zys.elec.entity.Post;
 import com.zys.elec.service.PostService;
 
+@RestController
+@RequestMapping("/post")
 public class PostController {
 
     @Autowired
     private PostService postService;
 
 
-    @PostMapping("/post/create")
+    @PostMapping("/create")
     @ResponseBody
     public ResponseResult<Post> createPost(
             @RequestParam Long userId,
@@ -32,7 +36,7 @@ public class PostController {
     }
 
 
-    @PostMapping("/post/update")
+    @PostMapping("/update")
     @ResponseBody
     public ResponseResult<Void> updatePost(
             @RequestParam Long postId,
@@ -47,7 +51,7 @@ public class PostController {
     }
 
 
-    @PostMapping("/post/delete")
+    @PostMapping("/delete")
     @ResponseBody
     public ResponseResult<Void> deletePost(@RequestParam Long postId) {
         var result = postService.deletePost(postId);
@@ -59,7 +63,7 @@ public class PostController {
         }
     }
 
-    @PostMapping("/post/get")
+    @PostMapping("/get")
     @ResponseBody
     public ResponseResult<Post> listPosts(@RequestParam Long userId) {
         var result = postService.getPostById(userId);
@@ -71,30 +75,5 @@ public class PostController {
         }
     }
 
-//    // 点赞
-//    @PostMapping("/post/like")
-//    @ResponseBody
-//    public ResponseResult<Void> likePost(@RequestParam Long postId) {
-//        var result = postService.likePost(postId);
-//
-//        if (result.isSuccess()) {
-//            return ResponseResult.success(null);
-//        } else {
-//            return ResponseResult.failure(result.getMessage());
-//        }
-//    }
-//
-//    // 转发
-//    @PostMapping("/post/forward")
-//    @ResponseBody
-//    public ResponseResult<Void> forwardPost(@RequestParam Long postId) {
-//        var result = postService.forwardPost(postId);
-//
-//        if (result.isSuccess()) {
-//            return ResponseResult.success(null);
-//        } else {
-//            return ResponseResult.failure(result.getMessage());
-//        }
-//    }
 }
 

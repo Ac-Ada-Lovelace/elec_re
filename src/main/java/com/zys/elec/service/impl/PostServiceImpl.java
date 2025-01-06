@@ -81,7 +81,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public ServiceResult<Post> createPost(Long userId, String content) {
         var userExists = userRepository.findById(userId);
-        if (!userExists.isEmpty()) {
+        if (userExists.isEmpty()) {
             return ServiceResult.failure("User not found");
         }
 

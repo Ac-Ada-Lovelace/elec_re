@@ -18,6 +18,7 @@ public interface PostService {
     ServiceResult<List<Post>> getUserPosts(User user);
 
     ServiceResult<Post> getPostById(Long postId);
+    ServiceResult<List<Post>> getPostsByUserId(Long userId);
 
 //    ServiceResult<Void> likePost(Long postId);
 //

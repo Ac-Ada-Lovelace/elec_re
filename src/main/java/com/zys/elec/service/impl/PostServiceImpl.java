@@ -88,7 +88,6 @@ public class PostServiceImpl implements PostService {
         var post = new Post();
         post.setContent(content);
         post.setUser(userExists.get());
-        
 
         try {
             postRepository.save(post);
@@ -96,6 +95,21 @@ public class PostServiceImpl implements PostService {
             return ServiceResult.failure("Failed to create post: " + e.getMessage());
         }
         return ServiceResult.success(post);
+
+    }
+
+    @Override
+    public ServiceResult<List<Post>> getPostsByUserId(Long userId) {
+        var userExists = userRepository.findById(userId);
+        if (userExists.isEmpty()) {
+            return ServiceResult.failure("User not found");
+        }
+
+        var postsOpt = postRepository.findByUserAndIsDeletedFalse(userExists.get());
+        return postsOpt.map(posts -> {
+            posts.forEach(post -> post.setUser(null));
+            return ServiceResult.success(posts);
+        }).orElseGet(() -> ServiceResult.failure("No posts found for the user"));
 
     }
 

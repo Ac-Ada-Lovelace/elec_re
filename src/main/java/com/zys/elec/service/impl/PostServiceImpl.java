@@ -87,6 +87,8 @@ public class PostServiceImpl implements PostService {
 
         var post = new Post();
         post.setContent(content);
+        post.setUser(userExists.get());
+        
 
         try {
             postRepository.save(post);

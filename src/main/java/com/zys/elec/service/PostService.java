@@ -9,6 +9,7 @@ import java.util.List;
 public interface PostService {
 
     ServiceResult<Post> createPost(Post post);
+    ServiceResult<Post> createPost(Long userId, String content);
 
     ServiceResult<Void> updatePostContent(Long postId, String newContent);
 

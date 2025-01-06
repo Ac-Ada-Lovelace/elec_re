@@ -9,6 +9,7 @@ import com.zys.elec.common.ServiceResult;
 import com.zys.elec.entity.Post;
 import com.zys.elec.entity.User;
 import com.zys.elec.repository.PostRepository;
+import com.zys.elec.repository.UserRepository;
 import com.zys.elec.service.PostService;
 
 @Service
@@ -16,6 +17,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public ServiceResult<Post> createPost(Post post) {
@@ -74,30 +78,48 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-//    @Override
-//    public ServiceResult<Void> likePost(Long postId) {
-//        var postOpt = postRepository.findByIdAndIsDeletedFalse(postId);
-//        if (postOpt.isEmpty()) {
-//            return ServiceResult.failure("Post not found or already deleted");
-//        }
-//
-//        var post = postOpt.get();
-//        post.setLikes(post.getLikes() + 1);
-//        postRepository.save(post);
-//        return ServiceResult.success(null);
-//    }
-//
-//    @Override
-//    public ServiceResult<Void> forwardPost(Long postId) {
-//        var postOpt = postRepository.findByIdAndIsDeletedFalse(postId);
-//        if (postOpt.isEmpty()) {
-//            return ServiceResult.failure("Post not found or already deleted");
-//        }
-//
-//        var post = postOpt.get();
-//        post.setForwards(post.getForwards() + 1);
-//        postRepository.save(post);
-//        return ServiceResult.success(null);
-//    }
-}
+    @Override
+    public ServiceResult<Post> createPost(Long userId, String content) {
+        var userExists = userRepository.findById(userId);
+        if (!userExists.isEmpty()) {
+            return ServiceResult.failure("User not found");
+        }
 
+        var post = new Post();
+        post.setContent(content);
+
+        try {
+            postRepository.save(post);
+        } catch (Exception e) {
+            return ServiceResult.failure("Failed to create post: " + e.getMessage());
+        }
+        return ServiceResult.success(post);
+
+    }
+
+    // @Override
+    // public ServiceResult<Void> likePost(Long postId) {
+    // var postOpt = postRepository.findByIdAndIsDeletedFalse(postId);
+    // if (postOpt.isEmpty()) {
+    // return ServiceResult.failure("Post not found or already deleted");
+    // }
+    //
+    // var post = postOpt.get();
+    // post.setLikes(post.getLikes() + 1);
+    // postRepository.save(post);
+    // return ServiceResult.success(null);
+    // }
+    //
+    // @Override
+    // public ServiceResult<Void> forwardPost(Long postId) {
+    // var postOpt = postRepository.findByIdAndIsDeletedFalse(postId);
+    // if (postOpt.isEmpty()) {
+    // return ServiceResult.failure("Post not found or already deleted");
+    // }
+    //
+    // var post = postOpt.get();
+    // post.setForwards(post.getForwards() + 1);
+    // postRepository.save(post);
+    // return ServiceResult.success(null);
+    // }
+}

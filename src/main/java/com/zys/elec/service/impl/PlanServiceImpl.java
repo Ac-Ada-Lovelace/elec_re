@@ -30,12 +30,17 @@ public class PlanServiceImpl implements PlanService {
     private UserRepository userRepository;
 
     @Override
-    public ServiceResult<Void> createPlan(Plan plan) {
+    public ServiceResult<Plan> createPlan(Plan plan) {
         var user = userService.getUserById(plan.getUserId());
 
         if (user == null) {
             return ServiceResult.failure("User not found");
         }
+
+        plan.setCurrentEc(0.0);
+        plan.setStatus(Plan.Status.IN_PROGRESS);
+        plan.setProgress(0.0);
+        plan.setDeleted(false);
 
         try {
 
@@ -54,11 +59,9 @@ public class PlanServiceImpl implements PlanService {
             return ServiceResult.failure("User not found");
         }
 
-        
-
         var plans = planRepository.findByUserId(userId);
-        
-        if(!plans.isEmpty()){
+
+        if (!plans.isEmpty()) {
             plans.get().forEach(x -> updatePlanStatus(x));
         }
         return ServiceResult.success(plans.orElse(null));

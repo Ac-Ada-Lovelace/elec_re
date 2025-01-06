@@ -6,7 +6,7 @@ import com.zys.elec.common.ServiceResult;
 import com.zys.elec.entity.Plan;
 
 public interface PlanService {
-    ServiceResult<Void> createPlan(  Plan plan);
+    ServiceResult<Plan> createPlan(  Plan plan);
     
     ServiceResult<Void> updatePlanContent(Plan plan);
 

@@ -1,5 +1,7 @@
 package com.zys.elec.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zys.elec.common.ResponseResult;
 import com.zys.elec.entity.Post;
+import com.zys.elec.repository.PostRepository;
 import com.zys.elec.service.PostService;
 
 @RestController
@@ -18,6 +21,9 @@ public class PostController {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private PostRepository postRepository;
+
 
     @PostMapping("/create")
     @ResponseBody
@@ -26,7 +32,9 @@ public class PostController {
             @RequestParam String content) {
         var result = postService.createPost(userId, content);
         if (result.isSuccess()) {
-            return ResponseResult.success(result.getData());
+            var post = result.getData();
+            post.setUser(null);
+            return ResponseResult.success(post);
         } else {
             return ResponseResult.failure(result.getMessage());
         }
@@ -62,8 +70,8 @@ public class PostController {
 
     @PostMapping("/get")
     @ResponseBody
-    public ResponseResult<Post> listPosts(@RequestParam Long userId) {
-        var result = postService.getPostById(userId);
+    public ResponseResult<List<Post>> listPosts(@RequestParam Long userId) {
+        var result = postService.getPostsByUserId(userId);
 
         if (result.isSuccess()) {
             return ResponseResult.success(result.getData());

@@ -15,19 +15,19 @@ public class PlanDTO {
 
     private String endTime;
 
-    private Double progress;
-
+    
     private String actualEndTime;
-
+    
     private String updateAt;
-
-
+    
+    
     private String targetEc;
-
+    
     private String currentEc;
-
-
-
+    
+    
+    
     private Plan.Status status;
-
+    
+    private Double progress;
 }

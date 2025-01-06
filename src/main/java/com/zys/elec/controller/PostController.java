@@ -24,10 +24,7 @@ public class PostController {
     public ResponseResult<Post> createPost(
             @RequestParam Long userId,
             @RequestParam String content) {
-        var post = new Post();
-        post.getUser().setId(userId);
-        post.setContent(content);
-        var result = postService.createPost(post);
+        var result = postService.createPost(userId, content);
         if (result.isSuccess()) {
             return ResponseResult.success(result.getData());
         } else {

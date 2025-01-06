@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.stereotype.Service;
 
 import com.zys.elec.common.ServiceResult;
 import com.zys.elec.entity.Plan;
@@ -13,6 +14,7 @@ import com.zys.elec.repository.UserRepository;
 import com.zys.elec.service.PlanService;
 import com.zys.elec.service.UserService;
 
+@Service
 public class PlanServiceImpl implements PlanService {
 
     @Autowired

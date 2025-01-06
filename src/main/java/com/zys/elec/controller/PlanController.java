@@ -33,11 +33,11 @@ public class PlanController {
     }
 
     @PostMapping("/create")
-    public ResponseResult<Void> createPlan(@RequestBody Plan plan) {
+    public ResponseResult<Plan> createPlan(@RequestBody Plan plan) {
         var res = planService.createPlan(plan);
 
         if (res.isSuccess()) {
-            return ResponseResult.success(null);
+            return ResponseResult.success(res.getData());
         } else {
             return ResponseResult.failure(res.getMessage());
         }

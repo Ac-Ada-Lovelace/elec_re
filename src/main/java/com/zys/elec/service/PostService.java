@@ -1,6 +1,7 @@
 package com.zys.elec.service;
 
 import com.zys.elec.common.ServiceResult;
+import com.zys.elec.dto.PostDTO;
 import com.zys.elec.entity.Post;
 import com.zys.elec.entity.User;
 
@@ -20,6 +21,7 @@ public interface PostService {
     ServiceResult<Post> getPostById(Long postId);
     ServiceResult<List<Post>> getPostsByUserId(Long userId);
 
+    ServiceResult<List<PostDTO>> getPosts(boolean onlyFriends, Long userId);
 //    ServiceResult<Void> likePost(Long postId);
 //
 //    ServiceResult<Void> forwardPost(Long postId);

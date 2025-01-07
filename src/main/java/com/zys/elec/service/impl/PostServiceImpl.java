@@ -1,15 +1,20 @@
 package com.zys.elec.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zys.elec.common.ServiceResult;
+import com.zys.elec.dto.PostDTO;
 import com.zys.elec.entity.Post;
 import com.zys.elec.entity.User;
+import com.zys.elec.repository.FollowRepository;
 import com.zys.elec.repository.PostRepository;
 import com.zys.elec.repository.UserRepository;
+import com.zys.elec.service.FollowService;
 import com.zys.elec.service.PostService;
 
 @Service
@@ -20,6 +25,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FollowRepository followRepository;
 
     @Override
     public ServiceResult<Post> createPost(Post post) {
@@ -113,6 +121,51 @@ public class PostServiceImpl implements PostService {
 
     }
 
+    @Override
+    public ServiceResult<List<PostDTO>> getPosts(boolean onlyFriends, Long userId) {
+        var userExists = userRepository.findById(userId);
+        if (userExists.isEmpty()) {
+            return ServiceResult.failure("User not found");
+        }
+
+        var user = userExists.get();
+
+        if (onlyFriends) {
+            var followerOpt = followRepository.findByFollower(user);
+            var followeeOpt = followRepository.findByFollowee(user);
+
+            if (followerOpt.isEmpty() || followeeOpt.isEmpty()) {
+                return ServiceResult.failure("No friends found for the user");
+            }
+
+            var follower = followerOpt.get();
+            var followee = followeeOpt.get();
+            var friends = new HashSet<User>();
+            follower.forEach(f -> friends.add(f.getFollowee()));
+            followee.forEach(f -> friends.add(f.getFollower()));
+            followee.forEach(f -> friends.add(f.getFollower()));
+            var friendsList = new ArrayList<User>(friends);
+
+            var postsOpt = postRepository.findByUserInAndIsDeletedFalse(friendsList);
+            var postsDTO = new ArrayList<PostDTO>();
+            postsOpt.ifPresent(posts -> {
+                posts.forEach(post -> {
+                    postsDTO.add(PostDTO.fromEntity(post));
+                });
+            });
+            return ServiceResult.success(postsDTO);
+        } else {
+            var postsOpt = postRepository.findByIsDeletedFalse();
+            var postsDTO = new ArrayList<PostDTO>();
+            postsOpt.ifPresent(posts -> {
+                posts.forEach(post -> {
+                    postsDTO.add(PostDTO.fromEntity(post));
+                });
+            });
+                return ServiceResult.success(postsDTO);
+        }
+    }
+
     // @Override
     // public ServiceResult<Void> likePost(Long postId) {
     // var postOpt = postRepository.findByIdAndIsDeletedFalse(postId);
@@ -138,4 +191,5 @@ public class PostServiceImpl implements PostService {
     // postRepository.save(post);
     // return ServiceResult.success(null);
     // }
+
 }

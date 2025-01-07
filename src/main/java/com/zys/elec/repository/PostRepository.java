@@ -17,4 +17,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<List<Post>> findByIsDeletedFalse();
 
     Optional<Post> findByIdAndIsDeletedFalse(Long id);
+
+    Optional<List<Post>> findByUserIn(List<User> friends);
+
+    Optional<List<Post>> findByUserInAndIsDeletedFalse(List<User> friends);
 }

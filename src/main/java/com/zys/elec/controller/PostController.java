@@ -3,6 +3,7 @@ package com.zys.elec.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,9 +11,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zys.elec.common.ResponseResult;
+import com.zys.elec.dto.PostDTO;
 import com.zys.elec.entity.Post;
 import com.zys.elec.repository.PostRepository;
 import com.zys.elec.service.PostService;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/post")
@@ -79,6 +83,21 @@ public class PostController {
             return ResponseResult.failure(result.getMessage());
         }
     }
+
+    @GetMapping("/getall")
+    public ResponseResult<List<PostDTO>> postMethodName(@RequestParam String onlyFriends, @RequestParam Long userId) {
+        var res = postService.getPosts(Boolean.parseBoolean(onlyFriends), userId);
+
+        if (res.isSuccess()) {
+            return ResponseResult.success(res.getData());
+        } else {
+            return ResponseResult.failure(res.getMessage());
+        }
+
+
+
+    }
+    
 
 }
 

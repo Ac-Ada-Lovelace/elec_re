@@ -8,13 +8,16 @@ import java.time.LocalDateTime;
 @Data
 @Table(name = "plans")
 public class Plan {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
+
+    @Column(name = "title", nullable = false, length = 50)
+    private String title;
 
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
@@ -50,8 +53,12 @@ public class Plan {
         FAILED,
         CANCELLED, OVERDUE
     }
+
     @PrePersist
     protected void onCreate() {
+        if (title == null) {
+            title = id.toString();
+        }
         updateAt = LocalDateTime.now();
         status = Status.IN_PROGRESS;
     }

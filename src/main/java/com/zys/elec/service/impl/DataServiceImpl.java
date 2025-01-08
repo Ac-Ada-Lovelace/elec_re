@@ -48,7 +48,12 @@ public class DataServiceImpl implements DataService {
                 // var res = predictRepository.findByUserAndTargetDate(user,
                 // record.getRecordDate());
                 if (res.isPresent()) {
-                    predict = res.get().get(0);
+                    if(res.get().size() > 0){
+
+                        predict = res.get().get(0);
+                    }else{
+                        predict = null;
+                    }
                 }
 
             }

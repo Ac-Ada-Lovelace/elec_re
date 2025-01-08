@@ -37,9 +37,7 @@ public class MessageServiceImpl implements MessageService {
         }
 
         var res = messageRepository.findMessagesBetweenUsers(senderId, receiverId);
-        if (res.isEmpty()) {
-            return new ServiceResult<>(false, "No messages found", null);
-        }
+        
         return new ServiceResult<>(true, "Messages found", res);
 
     }

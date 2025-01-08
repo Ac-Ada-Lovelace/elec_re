@@ -43,13 +43,11 @@ public class PlanServiceImpl implements PlanService {
         plan.setDeleted(false);
 
         try {
-
             planRepository.save(plan);
             return ServiceResult.success(null);
         } catch (Exception e) {
             return ServiceResult.failure(e.getMessage());
         }
-
     }
 
     @Override
